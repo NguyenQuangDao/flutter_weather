@@ -2,14 +2,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/services.dart';
-// import 'package:flutter_project/pagesWeather/main_home_page.dart';
-// import 'package:flutter_project/weather_screen.dart';
-//firebase
+// import 'package:flutter_project/test.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_project/global_variables.dart';
-import 'package:flutter_project/product_details_page.dart';
-import 'firebase_options.dart';
-// import 'home_page.dart';
+import 'package:flutter_project/provider/addProvider.dart';
+import 'package:provider/provider.dart';
+import 'provider/cartProvider.dart';
+import 'firebase/firebase_options.dart';
+import 'pages/home_page.dart';
 
 void main() async {
   await Firebase.initializeApp(
@@ -18,8 +17,7 @@ void main() async {
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(statusBarColor: Colors.white),
   );
-  runApp(DevicePreview(
-      enabled: !kReleaseMode, builder: (context) => const MyApp()));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -28,7 +26,16 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => CartProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => AddProvider(),
+        )
+      ],
+      child: MaterialApp(
         title: 'Shop App',
         theme: ThemeData(
           fontFamily: 'Lato',
@@ -49,9 +56,11 @@ class MyApp extends StatelessWidget {
           ),
         ),
         debugShowCheckedModeBanner: false,
-        // home: WeatherScreen(),
-        // home: MainHomePage(),
-        // home: MyhomePage(),
-        home: ProductDetailsPage(product: products[0]));
+
+        home: const MyhomePage(),
+        // home: const Test2(),
+        // home: ProductDetailsPage(product: products[0]),
+      ),
+    );
   }
 }
